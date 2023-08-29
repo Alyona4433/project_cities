@@ -41,7 +41,7 @@ public class WelcomeWindow {
 
     public static void showGameWindow() {
         JFrame gameFrame = new JFrame("Cities Game");
-        gameFrame.setSize(800, 600);
+        gameFrame.setSize(600, 400);
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setLayout(new BorderLayout());
 
@@ -63,7 +63,8 @@ public class WelcomeWindow {
                 String userCity = userInputField.getText().trim();
                 if (!userCity.isEmpty()) {
                     char lastLetter = userCity.charAt(userCity.length() - 1);
-                    String computerCity = getComputerCity(lastLetter);
+                    String filePath = "C:\\Users\\Finance\\IdeaProjects\\project_cities\\src\\main\\java\\org\\example\\cities.txt";
+                    String computerCity = getComputerCity(lastLetter, "cities.txt");
                     computerResponseLabel.setText("Computer's response: " + computerCity);
                 }
             }
@@ -74,15 +75,27 @@ public class WelcomeWindow {
         gameFrame.setVisible(true);
     }
 
-    public static String getComputerCity(char lastLetter) {
-        List<String> cities = loadCities("cities.txt");
+    public static String getComputerCity(char lastLetter, String filePath) {
+        List<String> cities = loadCities(filePath);
+        List<String> availableCities = new ArrayList<>();
+
         for (String city : cities) {
+
             if (city.charAt(0) == lastLetter) {
-                cities.remove(city);
-                return city;
+                availableCities.add(city);
+
             }
         }
-        return "No city found";
+
+        if (!availableCities.isEmpty()) {
+            int selectedIndex = (int) (Math.random() * availableCities.size());
+            String selectedCity = availableCities.get(selectedIndex);
+            cities.remove(selectedCity);
+            return selectedCity;
+        } else {
+            return "No city found";
+        }
+
     }
 //    метод для завантаження міст
     public static List<String> loadCities(String filePath) {
