@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class WelcomeWindow {
     public static void welcomeWindow() {
@@ -42,6 +47,7 @@ public class WelcomeWindow {
 
         JTextField userInputField = new JTextField(20);
         JButton submitButton = new JButton("Make a move");
+        JLabel computerResponseLabel = new JLabel();
 
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("Enter city name: "));
@@ -49,8 +55,46 @@ public class WelcomeWindow {
         inputPanel.add(submitButton);
 
         gameFrame.add(inputPanel, BorderLayout.NORTH);
+        gameFrame.add(computerResponseLabel, BorderLayout.CENTER);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userCity = userInputField.getText().trim();
+                if (!userCity.isEmpty()) {
+                    char lastLetter = userCity.charAt(userCity.length() - 1);
+                    String computerCity = getComputerCity(lastLetter);
+                    computerResponseLabel.setText("Computer's response: " + computerCity);
+                }
+            }
+        });
+
 
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
     }
+
+    public static String getComputerCity(char lastLetter) {
+        List<String> cities = loadCities("cities.txt");
+        for (String city : cities) {
+            if (city.charAt(0) == lastLetter) {
+                cities.remove(city);
+                return city;
+            }
+        }
+        return "No city found";
+    }
+//    метод для завантаження міст
+    public static List<String> loadCities(String filePath) {
+        List<String> cities = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNextLine()) {
+                cities.add(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
 }
