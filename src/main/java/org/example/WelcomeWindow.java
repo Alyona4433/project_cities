@@ -16,7 +16,7 @@ public class WelcomeWindow {
 
             startButton.addActionListener(e -> {
                 welcomeFrame.setVisible(false);
-                // Тут ви можете викликати метод для відображення гри
+
             });
 
             welcomeFrame.add(welcomeLabel);
