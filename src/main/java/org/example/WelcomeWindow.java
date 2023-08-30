@@ -24,7 +24,7 @@ public class WelcomeWindow {
             startButton.addActionListener(new ActionListener() {
 
                 @Override
-                        public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     welcomeFrame.setVisible(false); //Приховання вікна WelcomeWindow
                     showGameWindow();
                 }
@@ -38,7 +38,7 @@ public class WelcomeWindow {
             welcomeFrame.setVisible(true);
         });
     }
-
+    //показується вікно гри
     public static void showGameWindow() {
         JFrame gameFrame = new JFrame("Cities Game");
         gameFrame.setSize(600, 400);
@@ -49,6 +49,10 @@ public class WelcomeWindow {
         JButton submitButton = new JButton("Make a move");
         JLabel computerResponseLabel = new JLabel();
 
+        // Ініціалізація DefaultListModel
+        DefaultListModel<String> citiesListModel = new DefaultListModel<>();
+        JList<String> citiesList = new JList<>(citiesListModel);
+
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("Enter city name: "));
         inputPanel.add(userInputField);
@@ -58,14 +62,23 @@ public class WelcomeWindow {
         gameFrame.add(computerResponseLabel, BorderLayout.CENTER);
 
         submitButton.addActionListener(new ActionListener() {
+
+
+
+            // метод, який показує що відбувається при натисканні на "Make a move"
             @Override
             public void actionPerformed(ActionEvent e) {
+                //отримання введеного імені з поля userInputField, видалення пробілів
                 String userCity = userInputField.getText().trim();
                 if (!userCity.isEmpty()) {
+                    //отримання останньої літери введеного міста
                     char lastLetter = userCity.charAt(userCity.length() - 1);
-                    String filePath = "C:\\Users\\Finance\\IdeaProjects\\project_cities\\src\\main\\java\\org\\example\\cities.txt";
-                    String computerCity = getComputerCity(lastLetter, "cities.txt");
+                    String filePath = "C:\\Users\\Finance\\IdeaProjects\\project_cities\\src\\cities.txt";
+                    String computerCity = getComputerCity(lastLetter, filePath);
+
                     computerResponseLabel.setText("Computer's response: " + computerCity);
+
+                    citiesListModel.addElement(computerCity);
                 }
             }
         });
@@ -79,14 +92,22 @@ public class WelcomeWindow {
         List<String> cities = loadCities(filePath);
         List<String> availableCities = new ArrayList<>();
 
+        lastLetter = Character.toLowerCase(lastLetter); // Перетворити останню літеру на нижній регістр
+
+        //перевірка наявності доступу та правильного шляху до файлу cities
+//        System.out.println("Loading cities:");
+//        for (String city : cities) {
+//            System.out.println(city);
+//        }
+
         for (String city : cities) {
 
-            if (city.charAt(0) == lastLetter) {
+            if (Character.toLowerCase(city.charAt(0)) == lastLetter) {
                 availableCities.add(city);
 
             }
         }
-
+        //тут використовую Math аби не виникало проблем з довжиною списку після видалення міста
         if (!availableCities.isEmpty()) {
             int selectedIndex = (int) (Math.random() * availableCities.size());
             String selectedCity = availableCities.get(selectedIndex);
@@ -97,7 +118,7 @@ public class WelcomeWindow {
         }
 
     }
-//    метод для завантаження міст
+    //    метод для завантаження міст
     public static List<String> loadCities(String filePath) {
         List<String> cities = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(filePath))) {
@@ -110,4 +131,7 @@ public class WelcomeWindow {
         return cities;
     }
 
+
+
 }
+
