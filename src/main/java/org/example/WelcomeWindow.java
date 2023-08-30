@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class WelcomeWindow {
+    private static int playerScore = 0;
     public static void welcomeWindow() {
+
         SwingUtilities.invokeLater(() -> {
             JFrame welcomeFrame = new JFrame("Welcome to Cities Game");
             welcomeFrame.setSize(400, 100);
@@ -79,6 +81,7 @@ public class WelcomeWindow {
                     computerResponseLabel.setText("Computer's response: " + computerCity);
 
                     citiesListModel.addElement(computerCity);
+                    updatePlayerScore(); // Оновлення рахунку гравця
                 }
             }
         });
@@ -86,6 +89,19 @@ public class WelcomeWindow {
 
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
+    }
+
+    public static void updatePlayerScore() {
+        playerScore++; // Рахунок гравця збільшується на 1 при вірній відповіді
+        JFrame scoreFrame = new JFrame("Player Score");
+        scoreFrame.setSize(200, 100);
+        scoreFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        scoreFrame.setLayout(new FlowLayout());
+
+        JLabel scoreLabel = new JLabel("Player Score: " + playerScore);
+        scoreFrame.add(scoreLabel);
+        scoreFrame.setLocationRelativeTo(null);
+        scoreFrame.setVisible(true);
     }
 
     public static String getComputerCity(char lastLetter, String filePath) {
